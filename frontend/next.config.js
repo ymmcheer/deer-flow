@@ -10,9 +10,16 @@ function getInternalServiceURL(envKey, fallbackURL) {
     ? configured.replace(/\/+$/, "")
     : fallbackURL;
 }
+import nextra from "nextra";
+
+const withNextra = nextra({});
 
 /** @type {import("next").NextConfig} */
 const config = {
+  i18n: {
+    locales: ["en", "zh"],
+    defaultLocale: "en",
+  },
   devIndicators: false,
   async rewrites() {
     const rewrites = [];
@@ -45,10 +52,18 @@ const config = {
         source: "/api/agents/:path*",
         destination: `${gatewayURL}/api/agents/:path*`,
       });
+      rewrites.push({
+        source: "/api/skills",
+        destination: `${gatewayURL}/api/skills`,
+      });
+      rewrites.push({
+        source: "/api/skills/:path*",
+        destination: `${gatewayURL}/api/skills/:path*`,
+      });
     }
 
     return rewrites;
   },
 };
 
-export default config;
+export default withNextra(config);
